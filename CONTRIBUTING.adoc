@@ -1,0 +1,51 @@
+# Contribution Guidelines
+
+Contributions to this repository are very welcome! This repository uses
+[Trunk Based Development](https://trunkbaseddevelopment.com/). In case of higher complexity
+[GitFlow WorkFlow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow) can be used.
+
+Contributing is a subject to the following guidelines:
+
+----
+
+1. Raise DOP ticket
+2. Update the documentation
+3. Update the tests
+4. Update the code
+5. Create Merge Request
+6. Merge and Release
+
+----
+
+## Raise DOP Jira ticket
+
+Before starting any work, raise DOP Jira ticket.
+
+## Update the documentation
+
+Update the documentation before updating any code
+[Readme Driven Development](http://tom.preston-werner.com/2010/08/23/readme-driven-development.html).
+This ensures the documentation stays up to date and allows you to __think through the problem__ at a high level before
+you get lost in coding. At very least diagram located in docs folder. There you can find draw.io file.
+
+## Update the tests
+
+Update the automated tests before updating any code - [TDD](https://en.wikipedia.org/wiki/Test-driven_development)
+That means you add or update a test case, verify that it's failing with a clear error message, and then make the code
+changes to get that test to pass. Check tests folder. Don't forget to follow pre-commit framework and use
+ pre-commit hooks for clean development.
+
+## Update the code
+
+As you made code changes and used tests to verify everything works - Great! Just keep mind:
+
+1. Backwards compatibility if required
+2. Deployment versioning
+
+## Pre-Commit Framework
+
+Pre-Commit are useful for identifying simple issues before submission to code review.
+This repo runs hooks defined in .pre-commit-config.yaml on every commit to automatically point out issues
+in code such as missing semicolons, trailing whitespace, and debug statements.
+By pointing these issues out before code review, this allows a code reviewer
+to focus on the architecture of a change while not wasting time with trivial style nitpicks.
