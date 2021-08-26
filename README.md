@@ -6,7 +6,7 @@ This repository contains Terraform module for MySQL users and privileges managem
 
 * Central users management
 * Database creation
-* Manage users from local variable file 
+* Manage users from local variable file
 * Manage users from AWS Secret manager
 * Manage user privileges based on prepared map
 
@@ -33,7 +33,7 @@ Use winebarrel MySQL [provider](https://registry.terraform.io/providers/winebarr
 
 ## Usage
 - clone repository
-- cd  examples/manage-mysql 
+- cd  examples/manage-mysql
 - provide valid endpoint and credentials for RDS MySQL cluster
 - edit valid user list in variable or AWS Secret manager. In AWS Secret manager valid users format is:
 
@@ -53,6 +53,6 @@ Use winebarrel MySQL [provider](https://registry.terraform.io/providers/winebarr
   }
 ]
 ```
-- run terraform init
-- run terraform plan to check planned actions and states
-- run terraform apply to apply changes
+- ``` run terraform init ```
+- ``` run terraform plan ``` 
+- ``` run terraform apply ```
