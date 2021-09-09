@@ -3,23 +3,31 @@ variable "mysql-credentials" {
   description = "Credential for access to MySQL cluster"
   type        = map(any)
   default = {
-    endpoint = "test-aurora-mysql.cluster-cmz3l43pawky.eu-west-1.rds.amazonaws.com:3306"
+    endpoint = "tst-aurora-mysql-cluster.cluster-cmz3l43pawky.eu-west-1.rds.amazonaws.com:3306"
     username = "root"
     password = "testrunner01"
   }
 }
 
-variable "create-database" {
-  description = "Create new database ?"
-  type        = bool
-  default     = false
+
+variable "new-databases" {
+  description = "List of new databases to create. Leave blank if not required"
+  type        = list(any)
+  default     = ["demo", "demo2"]
+
 
 }
 
-variable "new-db-name" {
-  description = "New db name. Leave blank if not required"
+variable "default_character_set" {
+  description = "The default_character_set of the database."
   type        = string
-  default     = ""
+  default     = "utf8"
+
+}
+variable "default_collation" {
+  description = "The default_collation of the database."
+  type        = string
+  default     = "utf8_general_ci"
 
 }
 
@@ -73,6 +81,7 @@ variable "users" {
     host     = string
     role     = string
     password = string
+    database = list(string)
   }))
   default = [
     {
@@ -80,12 +89,14 @@ variable "users" {
       host     = "vpn"
       role     = "qa"
       password = "123456543"
+      database = ["*"]
     },
     {
       username = "jdoe5"
       host     = "%"
       role     = "qa"
       password = "9518462"
+      database = ["*"]
     }
   ]
 }

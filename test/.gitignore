@@ -6,5 +6,5 @@
 .terraform/
 *.tfstate*
 
-#go checking files 
+#go checking files
 check.*
