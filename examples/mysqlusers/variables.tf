@@ -5,7 +5,7 @@ variable "mysql-credentials" {
   default = {
     endpoint = "tst-aurora-mysql-cluster.cluster-cmz3l43pawky.eu-west-1.rds.amazonaws.com:3306"
     username = "root"
-    password = "testrunner01"
+    password = ""
   }
 }
 

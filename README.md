@@ -5,10 +5,12 @@ This repository contains Terraform module for MySQL users and privileges managem
 ## Features
 
 * Central users management
-* Database creation
+* Multiple Databases creation
 * Manage users from local variable file
 * Manage users from AWS Secret manager
 * Manage user privileges based on prepared map
+* Support AWSAuthenticationPlugin for user authentication
+
 
 ## Learn
 
@@ -27,14 +29,17 @@ pre-commit run --all-files
 
 ## Repository folder
 * *examples* - working examples
-* *modules* - folder with MySQL Module
+* *examples/vpc* - example for create new VPC
+* *examples/aurora* - example for create RDS cluster with Aurora instance
+* *examples/mysqlusers* - example with mysql users and databases on existing Aurora instance 
+* *examples/complite-vpc-aurora-mysqlusers* - full example with new VPC, aurora instance with new databases and new mysql users 
+* *modules* - folders with Modules
 
 Use winebarrel MySQL [provider](https://registry.terraform.io/providers/winebarrel/mysql/1.10.5)
 
 ## Usage
 - clone repository
-- cd  examples/manage-mysql
-- provide valid endpoint and credentials for RDS MySQL cluster
+- cd  examples/complite-vpc-aurora-mysqlusers
 - edit valid user list in variable or AWS Secret manager. In AWS Secret manager valid users format is:
 
 ```
@@ -44,12 +49,14 @@ Use winebarrel MySQL [provider](https://registry.terraform.io/providers/winebarr
     "password": "pass1",
     "host": "any",
     "role": "qa"
+    "database" : ["*"]
   },
   {
     "username": "user2",
     "password": "pass2",
     "host": "vpn",
     "role": "dev"
+    "database" : ["*"]
   }
 ]
 ```
