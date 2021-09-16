@@ -1,8 +1,0 @@
-# IDEs
-.idea/
-.vscode/
-
-# Terraform modules
-.terraform/
-*.tfstate*
-

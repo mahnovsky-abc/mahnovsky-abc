@@ -1,4 +1,5 @@
-#TODO add outputs
+#TODO verify outputs and add missing ones
+
 output "endpoint" {
   value       = var.mysql-credentials.endpoint
   description = "The DNS address or endpoint of the RDS instance"

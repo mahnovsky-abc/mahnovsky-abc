@@ -1,9 +1,18 @@
 provider "aws" {
-  region = local.region
+  region = var.aws_region
 }
 
-locals {
-  region = var.aws_region
+module "abc-tfmod-naming-convention" {
+  # When using these modules in your own templates, you will need to use a Git URL with a ref attribute that pins you
+  # to a specific version of the modules, such as the following example:
+  source      = "git::https://github.com/abcfinancial2/abc-tfmod-naming-convention.git"
+  aws_region  = var.aws_region
+  environment = var.environment
+  description = var.description
+  Creator     = var.Creator
+  Repository  = var.Repository
+  Artifacts   = var.Artifacts
+  tags        = var.tags
 }
 
 ################################################################################
@@ -11,16 +20,15 @@ locals {
 ################################################################################
 
 module "vpc" {
-  //source = "../../vpc/"
   source  = "terraform-aws-modules/vpc/aws"
   version = "3.7.0"
 
   name = var.vpc_name
-  cidr = var.vpc_cidr
+  cidr = "10.20.0.0/22"
 
   azs                                    = ["${local.region}a", "${local.region}b"]
-  private_subnets                        = var.private_subnets
-  public_subnets                         = var.public_subnets
+  private_subnets                        = ["10.20.0.0/24", "10.20.1.0/24"]
+  public_subnets                         = ["10.20.2.0/24", "10.20.3.0/24"]
   enable_ipv6                            = false
   manage_default_route_table             = false
   default_route_table_tags               = { DefaultRouteTable = true }
@@ -31,13 +39,9 @@ module "vpc" {
   enable_nat_gateway                     = false
   single_nat_gateway                     = false
   manage_default_security_group          = false
-  default_security_group_egress          = []
 
-  public_subnet_tags = var.tags
-  tags               = var.tags
-  vpc_tags           = var.tags
-
-
+  public_subnet_tags = { "name" : "demo-rds" }
+  tags               = module.abc-tfmod-naming-convention.tags.tags
 
 }
 
@@ -52,13 +56,13 @@ module "terraform-aws-aurora" {
   description                     = var.description
   Creator                         = var.Creator
   Repository                      = var.Repository
-  tags                            = var.tags
+  tags                            = module.abc-tfmod-naming-convention.tags.tags
   sport_prefix                    = var.sport_prefix
   admin_user                      = var.admin_user
   admin_password                  = var.admin_password
   vpc_id                          = module.vpc.vpc_id
   vpc_rds_security_group_ids      = [module.vpc.default_security_group_id]
-  aws_region                      = local.region
+  aws_region                      = var.aws_region
   db_port                         = var.db_port
   standard_cluster                = var.standard_cluster
   instance_type                   = var.instance_type
@@ -95,7 +99,7 @@ module "terraform-aws-aurora" {
 
   publicly_network_ids   = module.vpc.public_subnets
   private_network_ids    = module.vpc.private_subnets
-  cidr_blocks_for_public = var.cidr_blocks_for_public
+  cidr_blocks_for_public = var.cidr_blocks_for_public   #TODO check GitHub IP range
 }
 
 
