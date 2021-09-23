@@ -3,12 +3,6 @@ output "endpoint" {
   description = "The DNS address or endpoint of the RDS instance"
 }
 
-
-output "db_name" {
-  value       = module.terraform-aws-aurora-manage.db_name
-  description = "Database name"
-}
-
 output "admin_user" {
   value       = var.mysql-credentials.username
   description = "Database admin username"
@@ -20,5 +14,19 @@ output "admin_password" {
   description = "Database admin password"
   sensitive   = true
 }
+
+output "Databases" {
+  value       = module.terraform-aws-aurora-manage.db_name
+  description = "Databases"
+}
+
+output "users" {
+  value       = module.terraform-aws-aurora-manage.users
+  sensitive   = true
+  description = "List of users"
+}
+
+
+
 
 

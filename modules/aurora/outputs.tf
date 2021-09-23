@@ -23,6 +23,11 @@ output "reader_endpoint" {
   description = "A read-only endpoint for the Aurora cluster"
 }
 
+output "default_instance_endpoint" {
+  value       = aws_rds_cluster_instance.default[0].endpoint
+  description = "Endpoint of default instance"
+}
+
 output "db_name" {
   value       = aws_rds_cluster.default.database_name
   description = "Database name"

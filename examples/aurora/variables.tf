@@ -12,26 +12,9 @@ variable "sport_prefix" {
 
 variable "environment" {
   type        = string
-  description = "Provide valid environment abbreviation, ie.: tst, dev, qa, beta, staging"
+  description = "Provide valid environment abbreviation, ie.: TST, CI, UAT, PROD, GEN"
   default     = "tst"
-  validation {
-    condition = (
-      var.environment == "dev" ||
-      var.environment == "qa" ||
-      var.environment == "regression" ||
-      var.environment == "migration" ||
-      var.environment == "loadtest" ||
-      var.environment == "staging" ||
-      var.environment == "beta" ||
-      var.environment == "prod" ||
-      var.environment == "tst"
-    )
-
-    error_message = "The environment name must be: dev, qa, regression, migration, loadtest, staging, beta, prod, tst."
-  }
 }
-
-
 variable "description" {
   description = "Provide short service or application description."
   type        = string
@@ -41,7 +24,7 @@ variable "description" {
 variable "Creator" {
   description = "Provide creator name to identify resource owner."
   type        = string
-  default     = "Develover"
+  default     = "Developer"
 }
 
 variable "Repository" {
@@ -56,6 +39,11 @@ variable "Artifacts" {
   default     = "artifact"
 }
 
+variable "tags" {
+  description = "Provide additional tags if if needed."
+  type        = map(string)
+  default     = { "name" : "demo-rds" }
+}
 variable "application" {
   type        = string
   description = "Provide application description, ie.: Stats-Engine"
@@ -63,11 +51,23 @@ variable "application" {
 }
 
 
-// VPC
-variable "vpc_name" {
-  description = "Name to be used on all the resources as identifier"
+/*
+GENERAL NETWORK PARAMETERS for the network mainly, please don't forget to add
+VPN security group accordingly for the developers
+*/
+
+variable "vpc_id" {
   type        = string
-  default     = "demo-vpc"
+  default     = "vpc-08c60abaa4eb435e4"
+  description = "Provide VPC ID for RDS database"
+}
+
+variable "vpc_rds_security_group_ids" {
+  type = list(string)
+  default = [
+    "sg-0f51527d4cd25c685"
+  ]
+  description = "List of SG to be allowed to connect to the DB instance including VPN"
 }
 
 variable "db_port" {
@@ -79,6 +79,13 @@ variable "db_port" {
 /*
 AWS RDS CLUSTER INSTANCE PARAMETERS
 */
+
+variable "cluster_name" {
+  type        = string
+  default     = ""
+  description = "Cluster name. Live blank for autogenerate"
+}
+
 
 variable "standard_cluster" {
   type        = bool
@@ -99,12 +106,24 @@ variable "publicly_accessible" {
 }
 
 
+
+variable "publicly_network_ids" {
+  description = "A list of public subnets inside the VPC"
+  type        = list(string)
+  default     = [ "subnet-039b5f692f872fe5d","subnet-063349637729ef335",]
+}
+
+variable "private_network_ids" {
+  description = "A list of private subnets inside the VPC"
+  type        = list(string)
+  default     = ["subnet-0f1f45f8ab656345c", "subnet-0aa340e14eeb4e6fe"]
+}
+
 variable "cidr_blocks_for_public" {
   description = "A list of subnets to allow FROM access to rds"
   type        = list(string)
-  default     = ["91.193.126.245/32", "46.37.195.48/32"]
+  default     = ["91.193.125.11/32", "46.37.195.48/32"]
 }
-
 
 variable "engine" {
   type        = string
@@ -308,140 +327,4 @@ variable "deletion_protection" {
   type        = bool
   description = "If the DB instance should have deletion protection enabled"
   default     = false
-}
-
-
-
-# AWS Aurora database parameters
-
-variable "new-databases" {
-  description = "List of new databases to create. Leave blank if not required"
-  type        = list(any)
-  default     = ["demo1", "demo2"]
-
-
-}
-
-variable "default_character_set" {
-  description = "The default_character_set of the database."
-  type        = string
-  default     = "utf8"
-
-}
-variable "default_collation" {
-  description = "The default_collation of the database."
-  type        = string
-  default     = "utf8_general_ci"
-
-}
-
-
-variable "user_hosts" {
-  description = "list of hosts and networks allowed for users. Mapping user and host provided in 'users' variable"
-  type        = map(any)
-  default = {
-    "localhost" = "localhost"
-    "dev"       = "10.10.0.0/255.255.0.0"
-    "vpn"       = "10.50.0.0/255.255.0.0"
-    "any"       = "%"
-    "%"         = "%"
-
-  }
-
-}
-
-variable "roles" {
-  description = "Roles list"
-  type        = list(any)
-  default     = ["dev", "qa"]
-}
-
-variable "roles_priv" {
-  description = "Template for privileges. Mapping user and privileges provided in 'users' variable"
-  type        = map(any)
-  default = {
-    "dev" = ["SELECT", "INSERT", "UPDATE", "DELETE", "CREATE", "DROP", "RELOAD", "PROCESS", "REFERENCES", "INDEX", "ALTER", "SHOW DATABASES", "CREATE TEMPORARY TABLES",
-    "LOCK TABLES", "EXECUTE", "REPLICATION SLAVE", "REPLICATION CLIENT", "CREATE VIEW", "SHOW VIEW", "CREATE ROUTINE", "ALTER ROUTINE", "EVENT", "TRIGGER", "LOAD FROM S3", "SELECT INTO S3"]
-    "qa" = ["SELECT", "EXECUTE", "UPDATE", "DELETE", "CREATE"]
-
-  }
-
-
-}
-
-
-variable "use-local-userlist" {
-  description = "Create users from list in variable ?"
-  type        = bool
-  default     = true
-
-}
-
-# local user list. host and role should be created upper
-variable "users" {
-  description = "Provide users list"
-  type = list(object({
-    username = string
-    host     = string
-    role     = string
-    password = string
-    database = list(string)
-
-  }))
-  default = [
-    {
-      username = "jdoe"
-      host     = "vpn"
-      role     = "qa"
-      password = "123456543"
-      database = ["*"]
-    },
-    {
-      username = "jdoe5"
-      host     = "%"
-      role     = "qa"
-      password = "9518462"
-      database = ["*"]
-    }
-  ]
-}
-
-
-
-# user list with plugin auth. host and role should be created upper
-variable "users-with-auth-plugin" {
-  description = "Provide users list to create"
-  type = list(object({
-    username    = string
-    host        = string
-    role        = string
-    auth_plugin = string
-    database    = list(string)
-
-  }))
-  default = [
-    {
-      username    = "user5"
-      host        = "%"
-      role        = "qa"
-      auth_plugin = "AWSAuthenticationPlugin"
-      database    = ["*"]
-    }
-  ]
-}
-
-
-variable "use-aws-secret-userlist" {
-  description = "Create users from AWS Secret manager ?"
-  type        = bool
-  default     = false
-
-}
-
-# Please make sure that user list in secret is in correct format: should be in json like local user list upper
-variable "aws-secret-manager-secrets-name" {
-  description = "Name of AWS Secret manager secret with user list in json"
-  type        = string
-  default     = "mysql-users"
-
 }

@@ -12,10 +12,30 @@ module "terraform-aws-naming" {
   tags        = var.tags #place custom tags if needed
 }
 
+# for allow access from current ip
+data "http" "my_current_ip" {
+  url = "http://ipv4.icanhazip.com"
+}
+
+
+# github public ip https://api.github.com/meta
+data "github_ip_ranges" "git" {
+
+}
+
+locals {
+  min_instance_count     = var.cluster_scaling_mode ? var.autoscale_min_capacity : var.cluster_size
+  cluster_instance_count = var.standard_cluster ? local.min_instance_count : 0
+  cidr_public            = var.enable_access_from_current_environment ? concat(var.cidr_blocks_for_public, ["${chomp(data.http.my_current_ip.body)}/32"]) : var.cidr_blocks_for_public
+}
+
+
+
+
 resource "aws_security_group" "default" {
   count       = var.standard_cluster ? 1 : 0
   name        = "sg"
-  description = "Allow inbound traffic from Security Groups including VPN"
+  description = "Allow inbound traffic from Security Groups"
   vpc_id      = var.vpc_id
 
 
@@ -25,10 +45,21 @@ resource "aws_security_group" "default" {
       from_port   = var.db_port
       to_port     = var.db_port
       protocol    = "tcp"
-      cidr_blocks = var.cidr_blocks_for_public
-
+      cidr_blocks = local.cidr_public
     }
   }
+
+  dynamic "ingress" {
+    for_each = var.allow_access_from_github ? [0] : []
+    content {
+      from_port        = var.db_port
+      to_port          = var.db_port
+      protocol         = "tcp"
+      cidr_blocks      = [for block in data.github_ip_ranges.git.git : block if length(regexall("::", block)) == 0]
+      ipv6_cidr_blocks = [for block in data.github_ip_ranges.git.git : block if length(regexall("::", block)) > 0]
+    }
+  }
+
 
   egress {
     from_port   = 0
@@ -40,10 +71,7 @@ resource "aws_security_group" "default" {
   tags = module.terraform-aws-naming.resources.rds.tags
 }
 
-locals {
-  min_instance_count     = var.cluster_scaling_mode ? var.autoscale_min_capacity : var.cluster_size
-  cluster_instance_count = var.standard_cluster ? local.min_instance_count : 0
-}
+
 
 resource "aws_rds_cluster" "default" {
   cluster_identifier                  = lower(join("-", [var.environment, var.engine, "cluster"]))
@@ -129,6 +157,7 @@ resource "aws_rds_cluster_parameter_group" "default" {
 
   tags = module.terraform-aws-naming.resources.rds.tags
 }
+
 
 resource "aws_db_parameter_group" "default" {
   name        = join("-", [lower(var.environment), var.engine, "pg"])

@@ -7,8 +7,16 @@ output "endpoint" {
 
 
 output "db_name" {
-  value       = mysql_database.db
+  value = toset([
+    for bd in mysql_database.db : bd.name
+  ])
   description = "Database name"
+}
+
+output "users" {
+  value       = mysql_user.users_create
+  sensitive   = true
+  description = "List of users "
 }
 
 output "admin_user" {

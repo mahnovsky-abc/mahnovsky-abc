@@ -12,61 +12,31 @@ module "abc-tfmod-naming-convention" {
   Creator     = var.Creator
   Repository  = var.Repository
   Artifacts   = var.Artifacts
-  tags        = var.tags
+  tags        = var.tags #place custom tags if needed
 }
-
-################################################################################
-# VPC Module
-################################################################################
-
-module "vpc" {
-  source  = "terraform-aws-modules/vpc/aws"
-  version = "3.7.0"
-
-  name = var.vpc_name
-  cidr = "10.20.0.0/22"
-
-  azs                                    = ["${local.region}a", "${local.region}b"]
-  private_subnets                        = ["10.20.0.0/24", "10.20.1.0/24"]
-  public_subnets                         = ["10.20.2.0/24", "10.20.3.0/24"]
-  enable_ipv6                            = false
-  manage_default_route_table             = false
-  default_route_table_tags               = { DefaultRouteTable = true }
-  enable_dns_hostnames                   = true
-  enable_dns_support                     = true
-  create_database_subnet_group           = true
-  create_database_internet_gateway_route = false
-  enable_nat_gateway                     = false
-  single_nat_gateway                     = false
-  manage_default_security_group          = false
-
-  public_subnet_tags = { "name" : "demo-rds" }
-  tags               = module.abc-tfmod-naming-convention.tags.tags
-
-}
-
 
 module "terraform-aws-aurora" {
   # When using these modules in your own templates, you will need to use a Git URL with a ref attribute that pins you
   # to a specific version of the modules, such as the following example:
   source = "../../modules/aurora/"
 
+  
   application                     = var.application
   environment                     = var.environment
   description                     = var.description
   Creator                         = var.Creator
   Repository                      = var.Repository
-  tags                            = module.abc-tfmod-naming-convention.tags.tags
+  tags                            = module.abc-tfmod-naming-convention.resources.rds.tags
   sport_prefix                    = var.sport_prefix
   admin_user                      = var.admin_user
   admin_password                  = var.admin_password
-  vpc_id                          = module.vpc.vpc_id
-  vpc_rds_security_group_ids      = [module.vpc.default_security_group_id]
+  vpc_id                          = var.vpc_id
+  vpc_rds_security_group_ids      = var.vpc_rds_security_group_ids
   aws_region                      = var.aws_region
   db_port                         = var.db_port
   standard_cluster                = var.standard_cluster
   instance_type                   = var.instance_type
-  publicly_accessible             = var.publicly_accessible
+  publicly_accessible             = true//var.publicly_accessible
   engine                          = var.engine
   engine_mode                     = var.engine_mode
   engine_version                  = var.engine_version
@@ -97,33 +67,10 @@ module "terraform-aws-aurora" {
   enabled_cloudwatch_logs_exports = var.enabled_cloudwatch_logs_exports
   deletion_protection             = var.deletion_protection
 
-  publicly_network_ids   = module.vpc.public_subnets
-  private_network_ids    = module.vpc.private_subnets
+  publicly_network_ids   = var.publicly_network_ids
+  private_network_ids    = var.private_network_ids
   cidr_blocks_for_public = var.cidr_blocks_for_public   #TODO check GitHub IP range
-}
-
-
-module "terraform-aws-aurora-manage" {
-  source = "../../"
-  // create users from variable file
-  use-local-userlist = var.use-local-userlist
-  //create users from AWS Secret
-  use-aws-secret-userlist         = var.use-aws-secret-userlist
-  aws-secret-manager-secrets-name = var.aws-secret-manager-secrets-name
-
-
-
-  mysql-credentials = {
-    endpoint = module.terraform-aws-aurora.endpoint
-    username = module.terraform-aws-aurora.admin_user
-    password = module.terraform-aws-aurora.admin_password
-  }
-
-  new-databases = var.new-databases
-  users         = var.users
-  roles         = var.roles
-  user_hosts    = var.user_hosts
-  roles_priv    = var.roles_priv
-
-
+  enable_access_from_current_environment = true   # current ip will be added to cidr_blocks_for_public
+  allow_access_from_github = true
+  # github public ip https://api.github.com/meta 
 }

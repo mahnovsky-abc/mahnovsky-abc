@@ -21,13 +21,13 @@ variable "new-databases" {
 variable "default_character_set" {
   description = "The default_character_set of the database."
   type        = string
-  default     = "utf8"
+  default     = ""
 
 }
 variable "default_collation" {
   description = "The default_collation of the database."
   type        = string
-  default     = "utf8_general_ci"
+  default     = ""
 
 }
 
@@ -85,14 +85,14 @@ variable "users" {
   }))
   default = [
     {
-      username = "jdoe6"
+      username = "user1"
       host     = "vpn"
       role     = "qa"
       password = "123456543"
       database = ["*"]
     },
     {
-      username = "jdoe5"
+      username = "user2"
       host     = "%"
       role     = "qa"
       password = "9518462"
@@ -113,7 +113,7 @@ variable "users-with-auth-plugin" {
   }))
   default = [
     {
-      username    = "user5"
+      username    = "user3"
       host        = "%"
       role        = "qa"
       auth_plugin = "AWSAuthenticationPlugin"
@@ -134,7 +134,7 @@ variable "users-with-auth-plugin" {
 variable "use-aws-secret-userlist" {
   description = "Create users from AWS Secret manager ?"
   type        = bool
-  default     = false
+  default     = true
 
 }
 

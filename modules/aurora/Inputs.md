@@ -11,6 +11,8 @@
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.43 |
+| <a name="provider_github"></a> [github](#provider\_github) | n/a |
+| <a name="provider_http"></a> [http](#provider\_http) | n/a |
 
 ## Modules
 
@@ -28,6 +30,8 @@
 | [aws_rds_cluster_instance.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/rds_cluster_instance) | resource |
 | [aws_rds_cluster_parameter_group.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/rds_cluster_parameter_group) | resource |
 | [aws_security_group.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
+| [github_ip_ranges.git](https://registry.terraform.io/providers/hashicorp/github/latest/docs/data-sources/ip_ranges) | data source |
+| [http_http.my_current_ip](https://registry.terraform.io/providers/hashicorp/http/latest/docs/data-sources/http) | data source |
 
 ## Inputs
 
@@ -38,6 +42,7 @@
 | <a name="input_Repository"></a> [Repository](#input\_Repository) | Provide deployment repository. | `string` | `"https://github.com/abcfinancial2/abc-tfmod-mysql"` | no |
 | <a name="input_admin_password"></a> [admin\_password](#input\_admin\_password) | Database admin password | `string` | n/a | yes |
 | <a name="input_admin_user"></a> [admin\_user](#input\_admin\_user) | Database admin username | `string` | n/a | yes |
+| <a name="input_allow_access_from_github"></a> [allow\_access\_from\_github](#input\_allow\_access\_from\_github) | Add external IP github to SG for allow access | `bool` | `false` | no |
 | <a name="input_application"></a> [application](#input\_application) | Provide application description, ie.: Stats-Engine | `string` | n/a | yes |
 | <a name="input_apply_immediately"></a> [apply\_immediately](#input\_apply\_immediately) | Specifies whether any cluster modifications are applied immediately, or during the next maintenance window | `bool` | `true` | no |
 | <a name="input_autoscale_min_capacity"></a> [autoscale\_min\_capacity](#input\_autoscale\_min\_capacity) | Minimal Instance number | `number` | `1` | no |
@@ -53,6 +58,7 @@
 | <a name="input_db_port"></a> [db\_port](#input\_db\_port) | Database port | `number` | `3306` | no |
 | <a name="input_deletion_protection"></a> [deletion\_protection](#input\_deletion\_protection) | If the DB instance should have deletion protection enabled | `bool` | `false` | no |
 | <a name="input_description"></a> [description](#input\_description) | Provide short service or application description. | `string` | n/a | yes |
+| <a name="input_enable_access_from_current_environment"></a> [enable\_access\_from\_current\_environment](#input\_enable\_access\_from\_current\_environment) | Add external IP current enviroment to SG for allow access | `bool` | `false` | no |
 | <a name="input_enabled_cloudwatch_logs_exports"></a> [enabled\_cloudwatch\_logs\_exports](#input\_enabled\_cloudwatch\_logs\_exports) | List of log types to export to cloudwatch. The following log types are supported: audit, error, general, slowquery | `list(string)` | <pre>[<br>  "audit",<br>  "error",<br>  "general",<br>  "slowquery"<br>]</pre> | no |
 | <a name="input_engine"></a> [engine](#input\_engine) | The name of the database engine to be used for this DB cluster. Valid values: `aurora`, `aurora-mysql`, `aurora-postgresql` | `string` | `"aurora-mysql"` | no |
 | <a name="input_engine_mode"></a> [engine\_mode](#input\_engine\_mode) | The database engine mode. Valid values: `parallelquery`, `provisioned`, `serverless` | `string` | `"provisioned"` | no |
@@ -94,6 +100,7 @@
 | <a name="output_cluster_identifier"></a> [cluster\_identifier](#output\_cluster\_identifier) | Cluster Identifier |
 | <a name="output_database_name"></a> [database\_name](#output\_database\_name) | Database name |
 | <a name="output_db_name"></a> [db\_name](#output\_db\_name) | Database name |
+| <a name="output_default_instance_endpoint"></a> [default\_instance\_endpoint](#output\_default\_instance\_endpoint) | Endpoint of default instance |
 | <a name="output_endpoint"></a> [endpoint](#output\_endpoint) | The DNS address or endpoint of the RDS instance |
 | <a name="output_engine"></a> [engine](#output\_engine) | Database name |
 | <a name="output_engine_mode"></a> [engine\_mode](#output\_engine\_mode) | Database engine mode |

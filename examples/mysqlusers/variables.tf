@@ -3,9 +3,9 @@ variable "mysql-credentials" {
   description = "Credential for access to MySQL cluster"
   type        = map(any)
   default = {
-    endpoint = "tst-aurora-mysql-cluster.cluster-cmz3l43pawky.eu-west-1.rds.amazonaws.com:3306"
+    endpoint = "tst-aurora-mysql-cluster.cluster-cmz3l43pawky.eu-west-1.rds.amazonaws.com"
     username = "root"
-    password = ""
+    password = "testrunner01"
   }
 }
 
@@ -13,9 +13,7 @@ variable "mysql-credentials" {
 variable "new-databases" {
   description = "List of new databases to create. Leave blank if not required"
   type        = list(any)
-  default     = ["demo", "demo2"]
-
-
+  default     = ["db1", "db2"]
 }
 
 variable "default_character_set" {
@@ -30,7 +28,6 @@ variable "default_collation" {
   default     = "utf8_general_ci"
 
 }
-
 
 variable "user_hosts" {
   description = "list of hosts and networks allowed for users. Mapping user and host provided in 'users' variable"
@@ -85,14 +82,14 @@ variable "users" {
   }))
   default = [
     {
-      username = "jdoe6"
+      username = "user1"
       host     = "vpn"
       role     = "qa"
       password = "123456543"
       database = ["*"]
     },
     {
-      username = "jdoe5"
+      username = "user2"
       host     = "%"
       role     = "qa"
       password = "9518462"
@@ -102,10 +99,30 @@ variable "users" {
 }
 
 
+# user list with plugin auth. host and role should be created upper
+variable "users-with-auth-plugin" {
+  description = "Provide users list to create"
+  type = list(object({
+    username    = string
+    host        = string
+    role        = string
+    auth_plugin = string
+    database    = list(string)
+  }))
+  default = [
+    {
+      username    = "user3"
+      host        = "%"
+      role        = "qa"
+      auth_plugin = "AWSAuthenticationPlugin"
+      database    = ["*"]
+    }
+  ]
+}
 variable "use-aws-secret-userlist" {
   description = "Create users from AWS Secret manager ?"
   type        = bool
-  default     = false
+  default     = true
 
 }
 
