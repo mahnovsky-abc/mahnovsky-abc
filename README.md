@@ -32,7 +32,6 @@ pre-commit run --all-files
 * *examples/vpc* - example for create new VPC
 * *examples/aurora* - example for create RDS cluster with Aurora instance
 * *examples/mysqlusers* - example with mysql users and databases on existing Aurora instance
-* *examples/complite-vpc-aurora-mysqlusers* - full example with new VPC, aurora instance with new databases and new mysql users
 * *modules* - folders with Modules
 
 Use winebarrel MySQL [provider](https://registry.terraform.io/providers/winebarrel/mysql/1.10.5)
