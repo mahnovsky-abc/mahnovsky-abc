@@ -142,7 +142,7 @@ variable "use-aws-secret-userlist" {
 variable "aws-secret-manager-secrets-name" {
   description = "Name of AWS Secret manager secret with user list in json"
   type        = string
-  default     = "mysql-users"
+  default     = ""
 
 }
 
@@ -150,12 +150,14 @@ variable "aws-secret-manager-secrets-name" {
 variable "tls" {
   description = "An TLS-Option for the CREATE USER or ALTER USER statement. Ignored if MySQL version is under 5.7.0"
   type        = string
-  default     = "NONE"
+  default     = ""
   validation {
     condition = (
       var.tls == "NONE" ||
       var.tls == "SSL" ||
-      var.tls == "X509"
+      var.tls == "X509" ||
+      var.tls == ""         # will be used from locals
+
 
     )
     error_message = "Allowed values for tls: NONE, SSL or  X509."

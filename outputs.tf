@@ -8,7 +8,7 @@ output "endpoint" {
 
 output "db_name" {
   value = toset([
-    for bd in mysql_database.db : bd.name
+    for db in mysql_database.db : db.name
   ])
   description = "Database name"
 }

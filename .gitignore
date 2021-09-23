@@ -4,7 +4,15 @@
 
 # Terraform modules
 .terraform/
+*.terraform*
 *.tfstate*
 
 #go checking files
 check.*
+examples/complite-vpc-aurora-mysqlusers/*
+examples/vpc-aurora-mysqlusers/*
+.gitignore
+examples/complite-vpc-aurora-mysqlusers/Inputs.md
+examples/complite-vpc-aurora-mysqlusers/main.tf
+examples/complite-vpc-aurora-mysqlusers/outputs.tf
+examples/complite-vpc-aurora-mysqlusers/variables.tf

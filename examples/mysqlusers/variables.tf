@@ -122,7 +122,7 @@ variable "users-with-auth-plugin" {
 variable "use-aws-secret-userlist" {
   description = "Create users from AWS Secret manager ?"
   type        = bool
-  default     = true
+  default     = false
 
 }
 
