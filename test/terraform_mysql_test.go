@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"strings"
+	"github.com/gruntwork-io/terratest/modules/logger"
 	"testing"
 )
 
@@ -69,7 +70,8 @@ type TestMySQL struct {
 // - Check connection for each user to all databases
 func TestComplete(t *testing.T) {
 	uniqueId := strings.ToLower(random.UniqueId())
-
+	logger.Log(t, "uniqueId is ", uniqueId, ". It will be added to resource name")
+	logger.Log(t, "Will create VPC with name ", "test-vpc-%s", uniqueId)
 	var tcVPC = TestVPCData{
 		vpc_name:        fmt.Sprintf("test-vpc-%s", uniqueId),
 		vpc_cidr:        "10.0.0.0/16",
@@ -83,8 +85,9 @@ func TestComplete(t *testing.T) {
 	terraform.InitAndApply(t, vpcOpts)
 
 	vpc_id := terraform.Output(t, vpcOpts, "vpc_id")
+	logger.Log(t, "VPC created. vpc_id is ", vpc_id)
 	sg_id := terraform.Output(t, vpcOpts, "default_security_group_id")
-
+	logger.Log(t, "Will use security group", sg_id)
 	publicly_network_ids := terraform.OutputList(t, vpcOpts, "public_subnets")
 	private_network_ids := terraform.OutputList(t, vpcOpts, "private_subnets")
 
@@ -117,6 +120,12 @@ func TestComplete(t *testing.T) {
 
 	rdsOpts := configureTerraformOptionsRDS(t, rdsDir, tcRDS)
 	defer terraform.Destroy(t, rdsOpts)
+
+	logger.Log(t, "Will create RDS cluster with folowing parameters")
+	logger.Log(t, "cluster_name:", tcRDS.cluster_name)
+	logger.Log(t, "engine:", tcRDS.engine)
+	logger.Log(t, "engine_version:", tcRDS.engine_version)
+
 	terraform.InitAndApply(t, rdsOpts)
 
 	cred := mysql_cred{
@@ -124,6 +133,8 @@ func TestComplete(t *testing.T) {
 		username: terraform.Output(t, rdsOpts, "admin_user"),
 		password: terraform.Output(t, rdsOpts, "admin_password"),
 	}
+
+	logger.Log(t, "Cluster created. Endpoint ", terraform.Output(t, rdsOpts, "endpoint"))
 
 	var users_for_test []M
 
@@ -142,11 +153,17 @@ func TestComplete(t *testing.T) {
 
 	mysqlOpts := configureTerraformOptionsMySql(t, mysqlDir, tcMysql)
 	defer terraform.Destroy(t, mysqlOpts)
+
+	logger.Log(t, "Will create folowing databases and users:")
+	logger.Log(t, "databases:", tcMysql.new_databases)
+	logger.Log(t, "users:", tcMysql.users_for_test)
 	terraform.InitAndApply(t, mysqlOpts)
 
 	// check connection for each user for each database
 	for _, v := range users_for_test {
+		logger.Log(t, "Check access for user ", v["username"].(string))
 		for _, x := range tcMysql.new_databases {
+			logger.Log(t, "Connection to db ", x, " with username ", v["username"].(string))
 			checkMysqlConnection(t, cred.endpoint, x, v["username"].(string), v["password"].(string))
 		}
 	}
@@ -232,5 +249,6 @@ func checkMysqlConnection(t *testing.T, endpoint string, dbName string, username
 	defer db.Close()
 	res, err := db.Query("DO 1")
 	require.Nil(t, err)
+	logger.Log(t, "Connection successfull")
 	defer res.Close()
 }
