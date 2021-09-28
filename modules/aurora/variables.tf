@@ -109,12 +109,6 @@ variable "cidr_blocks_for_public" {
   default     = []
 }
 
-variable "enable_access_from_current_environment" {
-  type        = bool
-  default     = false
-  description = "Add external IP current enviroment to SG for allow access"
-}
-
 variable "allow_access_from_github" {
   type        = bool
   default     = false

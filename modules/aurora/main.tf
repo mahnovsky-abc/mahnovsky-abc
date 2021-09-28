@@ -12,12 +12,6 @@ module "terraform-aws-naming" {
   tags        = var.tags #place custom tags if needed
 }
 
-# for allow access from current ip
-data "http" "my_current_ip" {
-  url = "http://ipv4.icanhazip.com"
-}
-
-
 # github public ip https://api.github.com/meta
 data "github_ip_ranges" "git" {
 
@@ -26,7 +20,7 @@ data "github_ip_ranges" "git" {
 locals {
   min_instance_count     = var.cluster_scaling_mode ? var.autoscale_min_capacity : var.cluster_size
   cluster_instance_count = var.standard_cluster ? local.min_instance_count : 0
-  cidr_public            = var.enable_access_from_current_environment ? concat(var.cidr_blocks_for_public, ["${chomp(data.http.my_current_ip.body)}/32"]) : var.cidr_blocks_for_public
+  cidr_public            = var.cidr_blocks_for_public
 }
 
 
