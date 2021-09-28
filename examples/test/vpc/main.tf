@@ -44,9 +44,4 @@ module "vpc" {
   public_subnet_tags = module.abc-tfmod-naming-convention.resources.rds.tags
   tags               = module.abc-tfmod-naming-convention.resources.rds.tags
   vpc_tags = module.abc-tfmod-naming-convention.resources.rds.tags
-
-
-
-
-
 }

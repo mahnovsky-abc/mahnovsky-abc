@@ -16,7 +16,7 @@ resource "mysql_database" "db" {
 }
 
 data "aws_secretsmanager_secret" "database_credentials" {
-  count = var.use-aws-secret-userlist ? 1 : 0 #TODO use secret manager or plaintext
+  count = var.use-aws-secret-userlist ? 1 : 0
   name  = var.aws-secret-manager-secrets-name
 }
 

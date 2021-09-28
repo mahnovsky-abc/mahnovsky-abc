@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 module "terraform-aws-aurora-manage" {
-  source = "../../"
+  source = ".."
   // create users from variable file
   use-local-userlist = var.use-local-userlist
   //create users from AWS Secret
@@ -24,6 +24,4 @@ module "terraform-aws-aurora-manage" {
   roles         = var.roles
   user_hosts    = var.user_hosts
   roles_priv    = var.roles_priv
-
-
 }
