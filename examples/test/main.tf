@@ -43,7 +43,7 @@ module "vpc" {
 
   public_subnet_tags = module.abc-tfmod-naming-convention.resources.rds.tags
   tags               = module.abc-tfmod-naming-convention.resources.rds.tags
-  vpc_tags = module.abc-tfmod-naming-convention.resources.rds.tags
+  vpc_tags           = module.abc-tfmod-naming-convention.resources.rds.tags
 }
 
 
@@ -52,7 +52,7 @@ module "terraform-aws-aurora" {
   # to a specific version of the modules, such as the following example:
   source = "../../modules/aurora"
 
-  
+
   application                     = var.application
   environment                     = var.environment
   description                     = var.description
@@ -99,9 +99,9 @@ module "terraform-aws-aurora" {
   enabled_cloudwatch_logs_exports = var.enabled_cloudwatch_logs_exports
   deletion_protection             = var.deletion_protection
 
-  publicly_network_ids   = module.vpc.public_subnets
-  private_network_ids    = module.vpc.private_subnets
-  cidr_blocks_for_public = var.cidr_blocks_for_public  
+  publicly_network_ids     = module.vpc.public_subnets
+  private_network_ids      = module.vpc.private_subnets
+  cidr_blocks_for_public   = var.cidr_blocks_for_public
   allow_access_from_github = true
   # github public ip https://api.github.com/meta 
 }
@@ -115,16 +115,15 @@ provider "mysql" {
 
 //mysql
 module "terraform-aws-aurora-manage" {
-  depends_on = [module.terraform-aws-aurora]
-  source = "../../"
-  use-local-userlist = var.use-local-userlist
-  //create users from AWS Secret
+  depends_on                      = [module.terraform-aws-aurora]
+  source                          = "../../"
+  use-local-userlist              = var.use-local-userlist
   use-aws-secret-userlist         = var.use-aws-secret-userlist
   aws-secret-manager-secrets-name = var.aws-secret-manager-secrets-name
   users-with-auth-plugin          = var.users-with-auth-plugin
-  new-databases = var.new-databases
-  users         = var.users
-  roles         = var.roles
-  user_hosts    = var.user_hosts
-  roles_priv    = var.roles_priv
+  new-databases                   = var.new-databases
+  users                           = var.users
+  roles                           = var.roles
+  user_hosts                      = var.user_hosts
+  roles_priv                      = var.roles_priv
 }

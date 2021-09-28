@@ -107,7 +107,7 @@ variable "publicly_accessible" {
 variable "cidr_blocks_for_public" {
   description = "A list of subnets to allow FROM access to rds"
   type        = list(string)
-  default     = ["91.193.125.11/32", "91.193.126.216/32" , "46.37.195.48/32"]
+  default     = ["91.193.125.11/32", "91.193.126.216/32", "46.37.195.48/32"]
 }
 
 
@@ -439,7 +439,7 @@ variable "users-with-auth-plugin" {
 variable "use-aws-secret-userlist" {
   description = "Create users from AWS Secret manager ?"
   type        = bool
-  default     = true
+  default     = false
 
 }
 
