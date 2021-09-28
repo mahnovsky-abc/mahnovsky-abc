@@ -1,11 +1,3 @@
-# Configure the MySQL provider
-provider "mysql" {
-  endpoint = var.mysql-credentials.endpoint
-  username = var.mysql-credentials.username
-  password = var.mysql-credentials.password
-}
-
-
 # Create Databases
 resource "mysql_database" "db" {
   for_each              = toset(var.new-databases)

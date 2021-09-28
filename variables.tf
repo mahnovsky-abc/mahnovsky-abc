@@ -1,16 +1,3 @@
-
-variable "mysql-credentials" {
-  description = "Credential for access to MySQL cluster"
-  type        = map(any)
-  default = {
-    endpoint = "localhost:3306"
-    username = "root"
-    password = ""
-  }
-}
-
-
-
 variable "new-databases" {
   description = "List of new databases to create. Leave blank if not required"
   type        = list(any)

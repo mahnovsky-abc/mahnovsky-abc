@@ -106,26 +106,22 @@ module "terraform-aws-aurora" {
   # github public ip https://api.github.com/meta 
 }
 
+# Configure the MySQL provider
+provider "mysql" {
+  endpoint = module.terraform-aws-aurora.endpoint
+  username = module.terraform-aws-aurora.admin_user
+  password = module.terraform-aws-aurora.admin_password
+}
 
 //mysql
 module "terraform-aws-aurora-manage" {
-  #depends_on [module.terraform-aws-aurora]
+  depends_on = [module.terraform-aws-aurora]
   source = "../../"
-  // create users from variable file
   use-local-userlist = var.use-local-userlist
   //create users from AWS Secret
   use-aws-secret-userlist         = var.use-aws-secret-userlist
   aws-secret-manager-secrets-name = var.aws-secret-manager-secrets-name
   users-with-auth-plugin          = var.users-with-auth-plugin
-  
-
-  mysql-credentials = {
-    endpoint = module.terraform-aws-aurora.endpoint
-    username = module.terraform-aws-aurora.admin_user
-    password = module.terraform-aws-aurora.admin_password
-  }
-
-
   new-databases = var.new-databases
   users         = var.users
   roles         = var.roles
