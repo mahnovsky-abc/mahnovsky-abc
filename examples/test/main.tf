@@ -109,7 +109,7 @@ module "terraform-aws-aurora" {
 
 //mysql
 module "terraform-aws-aurora-manage" {
-  depends_on [module.terraform-aws-aurora]
+  #depends_on [module.terraform-aws-aurora]
   source = "../../"
   // create users from variable file
   use-local-userlist = var.use-local-userlist
