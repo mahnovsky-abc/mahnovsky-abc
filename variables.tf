@@ -88,6 +88,12 @@ variable "users" {
   ]
 }
 
+variable "use-users-with-auth-plugin" {
+  description = "Create users with plugin authentication?"
+  type        = bool
+  default     = false
+}
+
 # user list with plugin auth. host and role should be created upper
 variable "users-with-auth-plugin" {
   description = "Provide users list to create"
@@ -143,7 +149,7 @@ variable "tls" {
       var.tls == "NONE" ||
       var.tls == "SSL" ||
       var.tls == "X509" ||
-      var.tls == ""         # will be used from locals
+      var.tls == "" # will be used from locals
 
 
     )

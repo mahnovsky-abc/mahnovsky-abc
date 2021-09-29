@@ -9,7 +9,7 @@ This repository contains Terraform module for MySQL users and privileges managem
 * Manage users from local variable file
 * Manage users from AWS Secret manager
 * Manage user privileges based on prepared map
-* Support AWSAuthenticationPlugin for user authentication
+* Support AWSAuthenticationPlugin for user authentication. Make sure that selected DB instance type [support](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/UsingWithRDS.IAMDBAuth.html) IAM database authentication
 
 
 ## Learn
@@ -28,18 +28,15 @@ pre-commit run --all-files
 
 
 ## Repository folder
-* *examples* - working examples
-* *examples/vpc* - example for create new VPC
-* *examples/aurora* - example for create RDS cluster with Aurora instance
-* *examples/mysqlusers* - example with mysql users and databases on existing Aurora instance
-* *modules* - folders with Modules
+* *examples/test* - working examples
+* *modules/aurora* - module for RDS cluster with Aurora instance
 
 Use winebarrel MySQL [provider](https://registry.terraform.io/providers/winebarrel/mysql/1.10.5)
 
 ## Usage
 - clone repository
-- cd  examples/complite-vpc-aurora-mysqlusers
-- edit valid user list in variable or AWS Secret manager. In AWS Secret manager valid users format is:
+- cd examples/test
+- edit variables as required and provide valid user list in variable or AWS Secret manager. Template for user definition you can find in examples/test/variables.tf. In AWS Secret manager valid users format is:
 
 ```
 [

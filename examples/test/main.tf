@@ -48,12 +48,10 @@ module "vpc" {
 
 
 module "terraform-aws-aurora" {
-  # When using these modules in your own templates, you will need to use a Git URL with a ref attribute that pins you
-  # to a specific version of the modules, such as the following example:
-  source = "../../modules/aurora"
-
-
+  depends_on                      = [module.vpc]
+  source                          = "../../modules/aurora"
   application                     = var.application
+  cluster_name                    = var.cluster_name
   environment                     = var.environment
   description                     = var.description
   Creator                         = var.Creator
@@ -103,7 +101,7 @@ module "terraform-aws-aurora" {
   private_network_ids      = module.vpc.private_subnets
   cidr_blocks_for_public   = var.cidr_blocks_for_public
   allow_access_from_github = true
-  # github public ip https://api.github.com/meta 
+  # github public ip https://api.github.com/meta
 }
 
 # Configure the MySQL provider
@@ -113,13 +111,14 @@ provider "mysql" {
   password = module.terraform-aws-aurora.admin_password
 }
 
-//mysql
+#mysql
 module "terraform-aws-aurora-manage" {
   depends_on                      = [module.terraform-aws-aurora]
   source                          = "../../"
   use-local-userlist              = var.use-local-userlist
   use-aws-secret-userlist         = var.use-aws-secret-userlist
   aws-secret-manager-secrets-name = var.aws-secret-manager-secrets-name
+  use-users-with-auth-plugin      = var.use-users-with-auth-plugin
   users-with-auth-plugin          = var.users-with-auth-plugin
   new-databases                   = var.new-databases
   users                           = var.users

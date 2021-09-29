@@ -91,9 +91,16 @@ variable "standard_cluster" {
   description = "Non Serverless RDS Cluster"
 }
 
+variable "cluster_name" {
+  type        = string
+  default     = ""
+  description = "Cluster name. Live blank for autogenerate"
+}
+
+
 variable "instance_type" {
   type        = string
-  default     = "db.t2.small"
+  default     = "db.t2.medium"
   description = "RDS Instance type"
 }
 

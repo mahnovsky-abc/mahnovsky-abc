@@ -12,7 +12,6 @@
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.43 |
 | <a name="provider_github"></a> [github](#provider\_github) | n/a |
-| <a name="provider_http"></a> [http](#provider\_http) | n/a |
 
 ## Modules
 
@@ -31,7 +30,6 @@
 | [aws_rds_cluster_parameter_group.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/rds_cluster_parameter_group) | resource |
 | [aws_security_group.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
 | [github_ip_ranges.git](https://registry.terraform.io/providers/hashicorp/github/latest/docs/data-sources/ip_ranges) | data source |
-| [http_http.my_current_ip](https://registry.terraform.io/providers/hashicorp/http/latest/docs/data-sources/http) | data source |
 
 ## Inputs
 
@@ -51,6 +49,7 @@
 | <a name="input_backup_window"></a> [backup\_window](#input\_backup\_window) | Daily backup window time | `string` | `"03:00-05:00"` | no |
 | <a name="input_cidr_blocks_for_public"></a> [cidr\_blocks\_for\_public](#input\_cidr\_blocks\_for\_public) | A list of subnets to allow FROM access to rds | `list(string)` | `[]` | no |
 | <a name="input_cluster_family"></a> [cluster\_family](#input\_cluster\_family) | The family of the DB cluster parameter group | `string` | `"aurora-mysql5.7"` | no |
+| <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Cluster name. Live blank for autogenerate | `string` | `""` | no |
 | <a name="input_cluster_parameters"></a> [cluster\_parameters](#input\_cluster\_parameters) | List of DB cluster parameters to apply | <pre>list(object({<br>    apply_method = string<br>    name         = string<br>    value        = string<br>  }))</pre> | `[]` | no |
 | <a name="input_cluster_scaling_mode"></a> [cluster\_scaling\_mode](#input\_cluster\_scaling\_mode) | Enable Cluster autoscaling | `bool` | `true` | no |
 | <a name="input_cluster_size"></a> [cluster\_size](#input\_cluster\_size) | Number of database instances in the cluster | `number` | `2` | no |
@@ -58,7 +57,6 @@
 | <a name="input_db_port"></a> [db\_port](#input\_db\_port) | Database port | `number` | `3306` | no |
 | <a name="input_deletion_protection"></a> [deletion\_protection](#input\_deletion\_protection) | If the DB instance should have deletion protection enabled | `bool` | `false` | no |
 | <a name="input_description"></a> [description](#input\_description) | Provide short service or application description. | `string` | n/a | yes |
-| <a name="input_enable_access_from_current_environment"></a> [enable\_access\_from\_current\_environment](#input\_enable\_access\_from\_current\_environment) | Add external IP current enviroment to SG for allow access | `bool` | `false` | no |
 | <a name="input_enabled_cloudwatch_logs_exports"></a> [enabled\_cloudwatch\_logs\_exports](#input\_enabled\_cloudwatch\_logs\_exports) | List of log types to export to cloudwatch. The following log types are supported: audit, error, general, slowquery | `list(string)` | <pre>[<br>  "audit",<br>  "error",<br>  "general",<br>  "slowquery"<br>]</pre> | no |
 | <a name="input_engine"></a> [engine](#input\_engine) | The name of the database engine to be used for this DB cluster. Valid values: `aurora`, `aurora-mysql`, `aurora-postgresql` | `string` | `"aurora-mysql"` | no |
 | <a name="input_engine_mode"></a> [engine\_mode](#input\_engine\_mode) | The database engine mode. Valid values: `parallelquery`, `provisioned`, `serverless` | `string` | `"provisioned"` | no |
@@ -67,7 +65,7 @@
 | <a name="input_iam_authentication_enabled"></a> [iam\_authentication\_enabled](#input\_iam\_authentication\_enabled) | n/a | `bool` | `false` | no |
 | <a name="input_iam_roles"></a> [iam\_roles](#input\_iam\_roles) | Iam roles for the Aurora cluster | `list(string)` | `[]` | no |
 | <a name="input_instance_parameters"></a> [instance\_parameters](#input\_instance\_parameters) | List of DB instance parameters to apply | <pre>list(object({<br>    apply_method = string<br>    name         = string<br>    value        = string<br>  }))</pre> | `[]` | no |
-| <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | RDS Instance type | `string` | `"db.t2.small"` | no |
+| <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | RDS Instance type | `string` | `"db.t2.medium"` | no |
 | <a name="input_kms_key_arn"></a> [kms\_key\_arn](#input\_kms\_key\_arn) | The ARN for the KMS encryption key | `string` | `""` | no |
 | <a name="input_maintenance_window"></a> [maintenance\_window](#input\_maintenance\_window) | Weekly maintenance window | `string` | `"wed:02:00-wed:03:00"` | no |
 | <a name="input_performance_insights_enabled"></a> [performance\_insights\_enabled](#input\_performance\_insights\_enabled) | Whether to enable Performance Insights | `bool` | `false` | no |

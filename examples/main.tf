@@ -10,7 +10,7 @@ module "terraform-aws-aurora-manage" {
   use-aws-secret-userlist         = var.use-aws-secret-userlist
   aws-secret-manager-secrets-name = var.aws-secret-manager-secrets-name
   users-with-auth-plugin          = var.users-with-auth-plugin
-  
+
 
   mysql-credentials = {
     endpoint = var.mysql-credentials.endpoint

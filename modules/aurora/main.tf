@@ -23,9 +23,6 @@ locals {
   cidr_public            = var.cidr_blocks_for_public
 }
 
-
-
-
 resource "aws_security_group" "default" {
   count       = var.standard_cluster ? 1 : 0
   name        = "sg"
@@ -68,7 +65,7 @@ resource "aws_security_group" "default" {
 
 
 resource "aws_rds_cluster" "default" {
-  cluster_identifier                  = lower(join("-", [var.environment, var.engine, "cluster"]))
+  cluster_identifier                  = lower(join("-", [var.environment, var.engine, "cluster", var.cluster_name]))
   database_name                       = var.db_name
   master_username                     = var.admin_user
   master_password                     = var.admin_password
@@ -148,7 +145,6 @@ resource "aws_rds_cluster_parameter_group" "default" {
       value        = parameter.value.value
     }
   }
-
   tags = module.terraform-aws-naming.resources.rds.tags
 }
 

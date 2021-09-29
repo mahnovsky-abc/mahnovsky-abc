@@ -68,7 +68,6 @@ variable "application" {
 }
 
 
-// VPC
 variable "vpc_name" {
   description = "Name to be used on all the resources as identifier"
   type        = string
@@ -91,9 +90,15 @@ variable "standard_cluster" {
   description = "Non Serverless RDS Cluster"
 }
 
+variable "cluster_name" {
+  type        = string
+  default     = ""
+  description = "Cluster name. Live blank for autogenerate"
+}
+
 variable "instance_type" {
   type        = string
-  default     = "db.t2.small"
+  default     = "db.t2.medium"
   description = "RDS Instance type"
 }
 
@@ -264,9 +269,11 @@ variable "maintenance_window" {
   description = "Weekly maintenance window"
 }
 
+# iam_authentication_enabled require supported RDS Instance type. db.t2.small and db.t3.small not supported.
+# More https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/UsingWithRDS.IAMDBAuth.html
 variable "iam_authentication_enabled" {
   type    = bool
-  default = false
+  default = true
 }
 
 variable "iam_roles" {
@@ -318,7 +325,6 @@ variable "deletion_protection" {
 
 
 # AWS Aurora database parameters
-
 variable "new-databases" {
   description = "List of new databases to create. Leave blank if not required"
   type        = list(any)
@@ -412,6 +418,11 @@ variable "users" {
 }
 
 
+variable "use-users-with-auth-plugin" {
+  description = "Create users with plugin authentication?"
+  type        = bool
+  default     = true
+}
 
 # user list with plugin auth. host and role should be created upper
 variable "users-with-auth-plugin" {
@@ -440,7 +451,6 @@ variable "use-aws-secret-userlist" {
   description = "Create users from AWS Secret manager ?"
   type        = bool
   default     = false
-
 }
 
 # Please make sure that user list in secret is in correct format: should be in json like local user list upper
@@ -448,5 +458,4 @@ variable "aws-secret-manager-secrets-name" {
   description = "Name of AWS Secret manager secret with user list in json"
   type        = string
   default     = "mysql-users"
-
 }
