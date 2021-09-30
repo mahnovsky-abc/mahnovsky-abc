@@ -2,7 +2,7 @@
 resource "mysql_database" "db" {
   for_each              = toset(var.new-databases)
   name                  = each.key
-  default_character_set = var.default_character_set != "" ? var.default_character_set : local.db_defaults.default_character_set #TODO use default in locals if each.key not set
+  default_character_set = var.default_character_set != "" ? var.default_character_set : local.db_defaults.default_character_set
   default_collation     = var.default_collation != "" ? var.default_collation : local.db_defaults.default_collation
 
 }
