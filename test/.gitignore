@@ -1,0 +1,10 @@
+# IDEs
+.idea/
+.vscode/
+
+# Terraform modules
+.terraform/
+*.tfstate*
+
+#go checking files
+check.*
