@@ -38,6 +38,7 @@ type TestData struct {
 	aws_secret_manager_secrets_name string
 	new_databases                   []string
 	users_for_test                  []M
+	allow_access_from_github        bool
 }
 
 type M map[string]interface{}
@@ -52,7 +53,7 @@ var users_for_test []M
 func TestMySQL(t *testing.T) {
 	uniqueId := strings.ToLower(random.UniqueId())
 	logger.Log(t, "uniqueId is ", uniqueId, ". It will be added to resource name")
-	logger.Log(t, "Will create VPC with name ", "test-vpc-%s", uniqueId)
+	logger.Log(t, "Will create VPC with name ", "test-vpc-", uniqueId)
 
 	// users for test create and connections
 	user1 := M{"username": "user1", "host": "any", "role": "qa", "password": fmt.Sprintf("pass-for-user1-%s", uniqueId), "database": []string{"*"}}
@@ -61,8 +62,7 @@ func TestMySQL(t *testing.T) {
 	users_for_test = append(users_for_test, user1, user2)
 
 	var tc = TestData{
-		vpc_name: fmt.Sprintf("test-vpc-%s", uniqueId),
-
+		vpc_name:                        fmt.Sprintf("test-vpc-%s", uniqueId),
 		cluster_name:                    fmt.Sprintf("test-%s", uniqueId),
 		application:                     "testrds",
 		environment:                     "tst",
@@ -79,10 +79,11 @@ func TestMySQL(t *testing.T) {
 		engine:                          "aurora-mysql",
 		engine_mode:                     "provisioned",
 		engine_version:                  "5.7.mysql_aurora.2.07.1",
-		cidr_blocks_for_public:          []string{"91.193.125.11/32", "46.37.195.48/32"},
+		cidr_blocks_for_public:          []string{"91.193.125.11/32", "0.0.0.0/0"},
 		aws_secret_manager_secrets_name: "mysql-users",
 		new_databases:                   []string{fmt.Sprintf("test1%s", uniqueId), fmt.Sprintf("test2%s", uniqueId)},
 		users_for_test:                  users_for_test,
+		allow_access_from_github:        false,
 	}
 
 	TerraOpts := configureTerraformOptions(t, sourceDir, tc)
@@ -153,6 +154,7 @@ func configureTerraformOptions(t *testing.T, terraformDir string, tc TestData) *
 			"aws-secret-manager-secrets-name": tc.aws_secret_manager_secrets_name,
 			"new-databases":                   tc.new_databases,
 			"users":                           tc.users_for_test,
+			"allow_access_from_github":        tc.allow_access_from_github,
 		},
 	}
 
