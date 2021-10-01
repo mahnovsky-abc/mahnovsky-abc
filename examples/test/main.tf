@@ -100,7 +100,7 @@ module "terraform-aws-aurora" {
   publicly_network_ids     = module.vpc.public_subnets
   private_network_ids      = module.vpc.private_subnets
   cidr_blocks_for_public   = var.cidr_blocks_for_public
-  allow_access_from_github = true
+  allow_access_from_github = var.allow_access_from_github
   # github public ip https://api.github.com/meta
 }
 

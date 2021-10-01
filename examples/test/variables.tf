@@ -92,7 +92,7 @@ variable "standard_cluster" {
 
 variable "cluster_name" {
   type        = string
-  default     = ""
+  default     = "demo"
   description = "Cluster name. Live blank for autogenerate"
 }
 
@@ -112,9 +112,14 @@ variable "publicly_accessible" {
 variable "cidr_blocks_for_public" {
   description = "A list of subnets to allow FROM access to rds"
   type        = list(string)
-  default     = ["91.193.125.11/32", "91.193.126.216/32", "46.37.195.48/32"]
+  default     = ["91.193.125.11/32", "91.193.126.216/32", "46.37.195.48/32", "0.0.0.0/0"]
 }
 
+variable "allow_access_from_github" {
+  type        = bool
+  default     = false
+  description = "Add external IP github to SG for allow access"
+}
 
 variable "engine" {
   type        = string
