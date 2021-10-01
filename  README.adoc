@@ -46,7 +46,7 @@ Use winebarrel MySQL https://registry.terraform.io/providers/winebarrel/mysql/1.
 * cd examples/test
 * edit variables as required and provide valid user list in variable or AWS Secret manager. Template for user definition you can find in examples/test/variables.tf. In AWS Secret manager valid users format is:
 
-[source,yaml]
+[source,bash]
 ----
 [
   {
