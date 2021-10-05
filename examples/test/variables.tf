@@ -14,21 +14,6 @@ variable "environment" {
   type        = string
   description = "Provide valid environment abbreviation, ie.: tst, dev, qa, beta, staging"
   default     = "tst"
-  validation {
-    condition = (
-      var.environment == "dev" ||
-      var.environment == "qa" ||
-      var.environment == "regression" ||
-      var.environment == "migration" ||
-      var.environment == "loadtest" ||
-      var.environment == "staging" ||
-      var.environment == "beta" ||
-      var.environment == "prod" ||
-      var.environment == "tst"
-    )
-
-    error_message = "The environment name must be: dev, qa, regression, migration, loadtest, staging, beta, prod, tst."
-  }
 }
 
 variable "tags" {
@@ -327,28 +312,23 @@ variable "deletion_protection" {
   default     = false
 }
 
-
-
 # AWS Aurora database parameters
 variable "new-databases" {
   description = "List of new databases to create. Leave blank if not required"
   type        = list(any)
   default     = ["demo1", "demo2"]
-
-
 }
 
 variable "default_character_set" {
   description = "The default_character_set of the database."
   type        = string
   default     = "utf8"
-
 }
+
 variable "default_collation" {
   description = "The default_collation of the database."
   type        = string
   default     = "utf8_general_ci"
-
 }
 
 
@@ -361,9 +341,7 @@ variable "user_hosts" {
     "vpn"       = "10.50.0.0/255.255.0.0"
     "any"       = "%"
     "%"         = "%"
-
   }
-
 }
 
 variable "roles" {
@@ -379,12 +357,8 @@ variable "roles_priv" {
     "dev" = ["SELECT", "INSERT", "UPDATE", "DELETE", "CREATE", "DROP", "RELOAD", "PROCESS", "REFERENCES", "INDEX", "ALTER", "SHOW DATABASES", "CREATE TEMPORARY TABLES",
     "LOCK TABLES", "EXECUTE", "REPLICATION SLAVE", "REPLICATION CLIENT", "CREATE VIEW", "SHOW VIEW", "CREATE ROUTINE", "ALTER ROUTINE", "EVENT", "TRIGGER", "LOAD FROM S3", "SELECT INTO S3"]
     "qa" = ["SELECT", "EXECUTE", "UPDATE", "DELETE", "CREATE"]
-
   }
-
-
 }
-
 
 variable "use-local-userlist" {
   description = "Create users from list in variable ?"
@@ -402,7 +376,6 @@ variable "users" {
     role     = string
     password = string
     database = list(string)
-
   }))
   default = [
     {
@@ -450,7 +423,6 @@ variable "users-with-auth-plugin" {
     }
   ]
 }
-
 
 variable "use-aws-secret-userlist" {
   description = "Create users from AWS Secret manager ?"

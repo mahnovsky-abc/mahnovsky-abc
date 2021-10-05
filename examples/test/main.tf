@@ -15,20 +15,21 @@ module "abc-tfmod-naming-convention" {
   tags        = var.tags #place custom tags if needed
 }
 
-################################################################################
-# VPC Module
-################################################################################
+locals {
+  vpc_cidr    = "10.20.0.0/22"
+  azs         = ["a", "b"]
+  az_names    = formatlist("%s%s", var.aws_region, local.azs)
+  vpc_subnets = cidrsubnets(local.vpc_cidr, 2, 2, 2, 2)
+}
 
 module "vpc" {
-  source  = "terraform-aws-modules/vpc/aws"
-  version = "3.7.0"
-
-  name = var.vpc_name
-  cidr = "10.20.0.0/22"
-
-  azs                                    = ["${var.aws_region}a", "${var.aws_region}b"]
-  private_subnets                        = ["10.20.0.0/24", "10.20.1.0/24"]
-  public_subnets                         = ["10.20.2.0/24", "10.20.3.0/24"]
+  source                                 = "terraform-aws-modules/vpc/aws"
+  version                                = "3.7.0"
+  name                                   = var.vpc_name
+  cidr                                   = local.vpc_cidr
+  azs                                    = local.az_names
+  private_subnets                        = slice(local.vpc_subnets, 0, 2)
+  public_subnets                         = slice(local.vpc_subnets, 2, 4)
   enable_ipv6                            = false
   manage_default_route_table             = false
   default_route_table_tags               = { DefaultRouteTable = true }
@@ -111,7 +112,6 @@ provider "mysql" {
   password = module.terraform-aws-aurora.admin_password
 }
 
-#mysql
 module "terraform-aws-aurora-manage" {
   depends_on                      = [module.terraform-aws-aurora]
   source                          = "../../"

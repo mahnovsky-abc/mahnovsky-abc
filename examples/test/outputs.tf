@@ -87,3 +87,10 @@ output "users" {
   description = "List of users"
 }
 
+output "privileges" {
+  value       = module.terraform-aws-aurora-manage.privileges
+  description = "List of privileges"
+}
+
+
+

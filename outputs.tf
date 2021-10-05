@@ -11,3 +11,9 @@ output "users" {
   description = "List of users "
 }
 
+#add priv to output?
+
+output "privileges" {
+  value       = mysql_grant.users_create_privileges
+  description = "List of privileges"
+}

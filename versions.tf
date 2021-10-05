@@ -2,7 +2,7 @@
 terraform {
   required_version = ">= 1.0.0"
   required_providers {
-    aws    = ">= 3.55.0"
+    aws    = ">= 3.56.0"
     random = "~> 2.1"
     mysql = {
       source  = "winebarrel/mysql"

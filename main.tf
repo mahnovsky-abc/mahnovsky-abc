@@ -4,7 +4,6 @@ resource "mysql_database" "db" {
   name                  = each.key
   default_character_set = var.default_character_set != "" ? var.default_character_set : local.db_defaults.default_character_set
   default_collation     = var.default_collation != "" ? var.default_collation : local.db_defaults.default_collation
-
 }
 
 data "aws_secretsmanager_secret" "database_credentials" {
@@ -19,7 +18,6 @@ data "aws_secretsmanager_secret_version" "database_credentials" {
   depends_on = [data.aws_secretsmanager_secret.database_credentials]
 }
 
-
 # create users from variable
 resource "mysql_user" "users_create" {
   for_each = { for u in local.user-list : u.username => u
@@ -29,7 +27,6 @@ resource "mysql_user" "users_create" {
   plaintext_password = each.value.password
   tls_option         = var.tls != "" ? var.tls : local.user_defaults.tls_option
   depends_on         = [mysql_database.db]
-
 }
 
 resource "mysql_user" "users_create_plugin_auth" {
@@ -44,11 +41,10 @@ resource "mysql_user" "users_create_plugin_auth" {
 
 # Grant privileges
 resource "mysql_grant" "users_create_privileges" {
-  for_each = { for u in concat(local.user-list, local.users-with-auth-plugin) : u.username => u }
-  user     = each.value.username
-  host     = lookup(var.user_hosts, each.value.host, local.user_defaults.host)
-  database = join(",", each.value.database)
-
+  for_each   = { for u in concat(local.user-list, local.users-with-auth-plugin) : u.username => u }
+  user       = each.value.username
+  host       = lookup(var.user_hosts, each.value.host, local.user_defaults.host)
+  database   = join(",", each.value.database)
   privileges = lookup(var.roles_priv, each.value.role, local.user_defaults.privileges)
   depends_on = [mysql_user.users_create, mysql_user.users_create_plugin_auth]
 }

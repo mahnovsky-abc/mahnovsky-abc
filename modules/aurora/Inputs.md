@@ -3,21 +3,21 @@
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.43 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.56.0 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | ~> 2.1 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.43 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.56.0 |
 | <a name="provider_github"></a> [github](#provider\_github) | n/a |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_terraform-aws-naming"></a> [terraform-aws-naming](#module\_terraform-aws-naming) | git@github.com:abcfinancial2/abc-tfmod-naming-convention.git | n/a |
+| <a name="module_terraform-aws-naming"></a> [terraform-aws-naming](#module\_terraform-aws-naming) | git::https://github.com/abcfinancial2/abc-tfmod-naming-convention.git | n/a |
 
 ## Resources
 

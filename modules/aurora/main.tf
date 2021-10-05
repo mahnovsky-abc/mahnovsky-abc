@@ -1,5 +1,3 @@
-
-
 module "terraform-aws-naming" {
   # When using these modules in your own templates, you will need to use a Git URL with a ref attribute that pins you
   # to a specific version of the modules, such as the following example:
@@ -14,7 +12,6 @@ module "terraform-aws-naming" {
 
 # github public ip https://api.github.com/meta
 data "github_ip_ranges" "git" {
-
 }
 
 locals {
@@ -28,7 +25,6 @@ resource "aws_security_group" "default" {
   name        = "sg"
   description = "Allow inbound traffic from Security Groups"
   vpc_id      = var.vpc_id
-
 
   dynamic "ingress" {
     for_each = var.publicly_accessible ? [0] : []
@@ -51,7 +47,6 @@ resource "aws_security_group" "default" {
     }
   }
 
-
   egress {
     from_port   = 0
     to_port     = 0
@@ -61,8 +56,6 @@ resource "aws_security_group" "default" {
 
   tags = module.terraform-aws-naming.resources.rds.tags
 }
-
-
 
 resource "aws_rds_cluster" "default" {
   cluster_identifier                  = lower(join("-", [var.environment, var.engine, "cluster", var.cluster_name]))
@@ -123,8 +116,6 @@ resource "aws_rds_cluster_instance" "default" {
   tags                            = module.terraform-aws-naming.resources.rds.tags
 }
 
-
-
 resource "aws_db_subnet_group" "default" {
   name        = "db_subnet_group"
   subnet_ids  = var.publicly_network_ids
@@ -148,7 +139,6 @@ resource "aws_rds_cluster_parameter_group" "default" {
   tags = module.terraform-aws-naming.resources.rds.tags
 }
 
-
 resource "aws_db_parameter_group" "default" {
   name        = join("-", [lower(var.environment), var.engine, "pg"])
   description = "RDS parameter group"
@@ -162,6 +152,5 @@ resource "aws_db_parameter_group" "default" {
       value        = parameter.value.value
     }
   }
-
   tags = module.terraform-aws-naming.resources.rds.tags
 }

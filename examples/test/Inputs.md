@@ -3,7 +3,7 @@
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.55.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.56.0 |
 | <a name="requirement_mysql"></a> [mysql](#requirement\_mysql) | 1.10.5 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | ~> 2.1 |
 
@@ -33,6 +33,7 @@ No resources.
 | <a name="input_Repository"></a> [Repository](#input\_Repository) | Provide deployment repository. | `string` | `"https://github.com/abcfinancial2/abc-tfmod-mysql"` | no |
 | <a name="input_admin_password"></a> [admin\_password](#input\_admin\_password) | Database admin password | `string` | `"testrunner01"` | no |
 | <a name="input_admin_user"></a> [admin\_user](#input\_admin\_user) | Database admin username | `string` | `"root"` | no |
+| <a name="input_allow_access_from_github"></a> [allow\_access\_from\_github](#input\_allow\_access\_from\_github) | Add external IP github to SG for allow access | `bool` | `false` | no |
 | <a name="input_application"></a> [application](#input\_application) | Provide application description, ie.: Stats-Engine | `string` | `"test-app"` | no |
 | <a name="input_apply_immediately"></a> [apply\_immediately](#input\_apply\_immediately) | Specifies whether any cluster modifications are applied immediately, or during the next maintenance window | `bool` | `true` | no |
 | <a name="input_autoscale_min_capacity"></a> [autoscale\_min\_capacity](#input\_autoscale\_min\_capacity) | Minimal Instance number | `number` | `2` | no |
@@ -40,9 +41,9 @@ No resources.
 | <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | Specify AWS region for deployment | `string` | `"eu-west-1"` | no |
 | <a name="input_backtrack_window"></a> [backtrack\_window](#input\_backtrack\_window) | The target backtrack window, in seconds, must be between 0 and 259200 (72 hours) | `number` | `172800` | no |
 | <a name="input_backup_window"></a> [backup\_window](#input\_backup\_window) | Daily backup window time | `string` | `"03:00-05:00"` | no |
-| <a name="input_cidr_blocks_for_public"></a> [cidr\_blocks\_for\_public](#input\_cidr\_blocks\_for\_public) | A list of subnets to allow FROM access to rds | `list(string)` | <pre>[<br>  "91.193.125.11/32",<br>  "91.193.126.216/32",<br>  "46.37.195.48/32"<br>]</pre> | no |
+| <a name="input_cidr_blocks_for_public"></a> [cidr\_blocks\_for\_public](#input\_cidr\_blocks\_for\_public) | A list of subnets to allow FROM access to rds | `list(string)` | <pre>[<br>  "91.193.125.11/32",<br>  "91.193.126.216/32",<br>  "46.37.195.48/32",<br>  "0.0.0.0/0"<br>]</pre> | no |
 | <a name="input_cluster_family"></a> [cluster\_family](#input\_cluster\_family) | The family of the DB cluster parameter group | `string` | `"aurora-mysql5.7"` | no |
-| <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Cluster name. Live blank for autogenerate | `string` | `""` | no |
+| <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Cluster name. Live blank for autogenerate | `string` | `"demo"` | no |
 | <a name="input_cluster_parameters"></a> [cluster\_parameters](#input\_cluster\_parameters) | List of DB cluster parameters to apply | <pre>list(object({<br>    apply_method = string<br>    name         = string<br>    value        = string<br>  }))</pre> | `[]` | no |
 | <a name="input_cluster_scaling_mode"></a> [cluster\_scaling\_mode](#input\_cluster\_scaling\_mode) | Enable Cluster autoscaling | `bool` | `false` | no |
 | <a name="input_cluster_size"></a> [cluster\_size](#input\_cluster\_size) | Number of database instances in the cluster | `number` | `1` | no |
@@ -84,7 +85,7 @@ No resources.
 | <a name="input_use-local-userlist"></a> [use-local-userlist](#input\_use-local-userlist) | Create users from list in variable ? | `bool` | `true` | no |
 | <a name="input_use-users-with-auth-plugin"></a> [use-users-with-auth-plugin](#input\_use-users-with-auth-plugin) | Create users with plugin authentication? | `bool` | `true` | no |
 | <a name="input_user_hosts"></a> [user\_hosts](#input\_user\_hosts) | list of hosts and networks allowed for users. Mapping user and host provided in 'users' variable | `map(any)` | <pre>{<br>  "%": "%",<br>  "any": "%",<br>  "dev": "10.10.0.0/255.255.0.0",<br>  "localhost": "localhost",<br>  "vpn": "10.50.0.0/255.255.0.0"<br>}</pre> | no |
-| <a name="input_users"></a> [users](#input\_users) | Provide users list | <pre>list(object({<br>    username = string<br>    host     = string<br>    role     = string<br>    password = string<br>    database = list(string)<br><br>  }))</pre> | <pre>[<br>  {<br>    "database": [<br>      "*"<br>    ],<br>    "host": "vpn",<br>    "password": "12345678",<br>    "role": "qa",<br>    "username": "user1"<br>  },<br>  {<br>    "database": [<br>      "*"<br>    ],<br>    "host": "%",<br>    "password": "12345678",<br>    "role": "qa",<br>    "username": "user2"<br>  }<br>]</pre> | no |
+| <a name="input_users"></a> [users](#input\_users) | Provide users list | <pre>list(object({<br>    username = string<br>    host     = string<br>    role     = string<br>    password = string<br>    database = list(string)<br>  }))</pre> | <pre>[<br>  {<br>    "database": [<br>      "*"<br>    ],<br>    "host": "vpn",<br>    "password": "12345678",<br>    "role": "qa",<br>    "username": "user1"<br>  },<br>  {<br>    "database": [<br>      "*"<br>    ],<br>    "host": "%",<br>    "password": "12345678",<br>    "role": "qa",<br>    "username": "user2"<br>  }<br>]</pre> | no |
 | <a name="input_users-with-auth-plugin"></a> [users-with-auth-plugin](#input\_users-with-auth-plugin) | Provide users list to create | <pre>list(object({<br>    username    = string<br>    host        = string<br>    role        = string<br>    auth_plugin = string<br>    database    = list(string)<br><br>  }))</pre> | <pre>[<br>  {<br>    "auth_plugin": "AWSAuthenticationPlugin",<br>    "database": [<br>      "*"<br>    ],<br>    "host": "%",<br>    "role": "qa",<br>    "username": "user5"<br>  }<br>]</pre> | no |
 | <a name="input_vpc_name"></a> [vpc\_name](#input\_vpc\_name) | Name to be used on all the resources as identifier | `string` | `"demo-vpc"` | no |
 
@@ -103,6 +104,7 @@ No resources.
 | <a name="output_endpoint"></a> [endpoint](#output\_endpoint) | The DNS address or endpoint of the RDS instance |
 | <a name="output_nat_public_ips"></a> [nat\_public\_ips](#output\_nat\_public\_ips) | List of public Elastic IPs created for AWS NAT Gateway |
 | <a name="output_private_subnets"></a> [private\_subnets](#output\_private\_subnets) | List of IDs of private subnets |
+| <a name="output_privileges"></a> [privileges](#output\_privileges) | List of privileges |
 | <a name="output_public_subnets"></a> [public\_subnets](#output\_public\_subnets) | List of IDs of public subnets |
 | <a name="output_reader_endpoint"></a> [reader\_endpoint](#output\_reader\_endpoint) | A read-only endpoint for the Aurora cluster |
 | <a name="output_users"></a> [users](#output\_users) | List of users |

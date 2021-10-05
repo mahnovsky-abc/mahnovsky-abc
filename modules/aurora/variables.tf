@@ -13,29 +13,11 @@ variable "sport_prefix" {
   description = "Provide valid sport prefix, ie.: AF, FB, BB, VLB, BSB, RPE"
 }
 
-
-
 variable "environment" {
   type        = string
   description = "Provide valid environment abbreviation, ie.: TST, CI, UAT, PROD, GEN"
   default     = "tst"
-  validation {
-    condition = (
-      var.environment == "dev" ||
-      var.environment == "qa" ||
-      var.environment == "regression" ||
-      var.environment == "migration" ||
-      var.environment == "loadtest" ||
-      var.environment == "staging" ||
-      var.environment == "beta" ||
-      var.environment == "prod" ||
-      var.environment == "tst"
-    )
-
-    error_message = "The environment name must be: dev, qa, regression, migration, loadtest, staging, beta, prod, tst."
-  }
 }
-
 
 variable "description" {
   description = "Provide short service or application description."
@@ -122,13 +104,11 @@ variable "allow_access_from_github" {
   description = "Add external IP github to SG for allow access"
 }
 
-
 variable "publicly_network_ids" {
   type        = list(string)
   default     = []
   description = "List of public networks to allow access"
 }
-
 
 variable "private_accessible" {
   type        = bool
